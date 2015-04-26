@@ -126,28 +126,50 @@ CRational& CRational::operator -=(CRational const& rational)
 //////////////////////////////////////////////////////////////////////////
 // TODO: 7. Реализовать оператор *
 //////////////////////////////////////////////////////////////////////////
-
+const CRational operator * (const CRational &num1, const CRational &num2)
+{
+	CRational multOp = CRational(num1.GetNumerator() * num2.GetNumerator(), num1.GetDenominator() * num2.GetDenominator());
+	multOp.Normalize();
+	return multOp;
+}
 
 
 
 //////////////////////////////////////////////////////////////////////////
 // TODO: 8. Реализовать оператор /
 //////////////////////////////////////////////////////////////////////////
-
+const CRational operator / (const CRational &num1, const CRational &num2)
+{
+	CRational divOp = CRational(num1.GetNumerator() * num2.GetDenominator(), num1.GetDenominator() * num2.GetNumerator());
+	divOp.Normalize();
+	return divOp;
+}
 
 
 
 //////////////////////////////////////////////////////////////////////////
-// TODO: 9. Реализовать оператор *=
+// TODO: 9. Реализовать оператор *=   
 //////////////////////////////////////////////////////////////////////////
-
+CRational& CRational::operator *=(CRational const& rational)
+{
+	m_numerator = m_numerator * rational.m_numerator;
+	m_denominator = rational.m_denominator * m_denominator;
+	Normalize();
+	return *this;
+}
 
 
 
 //////////////////////////////////////////////////////////////////////////
 // TODO: 10. Реализовать оператор /=
 //////////////////////////////////////////////////////////////////////////
-
+CRational& CRational::operator /=(CRational const& rational)
+{
+	m_numerator = m_numerator * rational.m_denominator;
+	m_denominator = rational.m_numerator * m_denominator;
+	Normalize();
+	return *this;
+}
 
 
 
@@ -169,14 +191,37 @@ const bool operator != (const CRational &num1, const CRational &num2)
 //////////////////////////////////////////////////////////////////////////
 // TODO: 12. Реализовать операторы <, >, <=, >=
 //////////////////////////////////////////////////////////////////////////
+const bool operator < (const CRational &num1, const CRational &num2)
+{
+	const unsigned lcm = LCM(num1.GetDenominator(), num2.GetDenominator());
+    return ((lcm * num1.GetNumerator() / num1.GetDenominator()) < (lcm * num2.GetNumerator() / num2.GetDenominator()));
+}
 
+const bool operator > (const CRational &num1, const CRational &num2)
+{
+	const unsigned lcm = LCM(num1.GetDenominator(), num2.GetDenominator());
+    return ((lcm * num1.GetNumerator() / num1.GetDenominator()) > (lcm * num2.GetNumerator() / num2.GetDenominator()));
+}
 
+const bool operator <= (const CRational &num1, const CRational &num2)
+{
+	const unsigned lcm = LCM(num1.GetDenominator(), num2.GetDenominator());
+    return ((lcm * num1.GetNumerator() / num1.GetDenominator()) <= (lcm * num2.GetNumerator() / num2.GetDenominator()));
+}
 
+const bool operator >= (const CRational &num1, const CRational &num2)
+{
+	const unsigned lcm = LCM(num1.GetDenominator(), num2.GetDenominator());
+    return ((lcm * num1.GetNumerator() / num1.GetDenominator()) >= (lcm * num2.GetNumerator() / num2.GetDenominator()));
+}
 
 //////////////////////////////////////////////////////////////////////////
 // TODO: 13. Реализовать оператор вывода рационального числа в выходной поток 
 //////////////////////////////////////////////////////////////////////////
-
+std::ostream & operator << (std::ostream &stream, CRational const &rational)
+{
+	return stream << rational.GetNumerator() << '/' << rational.GetDenominator();
+}
 
 
 
@@ -184,5 +229,22 @@ const bool operator != (const CRational &num1, const CRational &num2)
 //////////////////////////////////////////////////////////////////////////
 // TODO: 14. Реализовать оператор ввода рационального числа из входного потока 
 //////////////////////////////////////////////////////////////////////////
+std::istream & operator >> (std::istream &stream, CRational &rational)
+{
+	std::streamoff pos = stream.tellg();
 
+	int numerator = 0,
+		denominator = 0;
+
+	if ((stream  >> numerator) && ((stream.get() == '/')) && (stream >> denominator))
+	{
+		rational = CRational(numerator, denominator);
+		return stream;
+	}
+
+	stream.seekg(pos);
+	stream.setstate(std::ios_base::failbit | stream.rdstate());
+
+	return stream;
+}
 

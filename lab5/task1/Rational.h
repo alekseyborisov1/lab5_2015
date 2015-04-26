@@ -67,6 +67,8 @@ public:
 	//	(1/2) - (1/6) = (1/3)
 	//	(1/2) - 1     = (-1/2)
 	//	1 - (1/2)     = (1/2)
+	const friend CRational operator + (const CRational &num1, const CRational &num2);
+	const friend CRational operator - (const CRational &num1, const CRational &num2);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -102,6 +104,7 @@ public:
 	//	(1/2) * (2/3) = (1/3)
 	//	(1/2) * (-3)  = (-3/2)
 	//	(7*2) / 3     = (14/3)
+	const friend CRational operator * (const CRational &num1, const CRational &num2);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -115,6 +118,7 @@ public:
 	//	(1/2) ⁄ (2/3) = (3/4)
 	//	(1/2) ⁄ 5     = (1/10)
 	//	7 ⁄ (2/3)     = (21/2)
+	const friend CRational operator / (const CRational &num1, const CRational &num2);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -127,6 +131,7 @@ public:
 	//	либо целое:
 	//	(1/2) *= (2/3) → (1/3)
 	//	(1/2) *= 3     → (3/2)
+	CRational& operator *=(CRational const& rational);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -139,6 +144,7 @@ public:
 	//	либо целое:
 	//	(1/2) /= (2/3) → (3/4)
 	//	(1/2) /= 3     → (1/6)
+	CRational& operator /=(CRational const& rational);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -154,6 +160,8 @@ public:
 	//	(1/2) != (2/3) → true
 	//	(1/2) != 7     → true
 	//	3 != (2/3)     → true
+	const friend bool operator == (const CRational &num1, const CRational &num2);
+	const friend bool operator != (const CRational &num1, const CRational &num2);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -169,6 +177,10 @@ public:
 	//	(1/2) < 7      → true
 	//	3 <= (7/2)     → true
 	//	3 >= (8/2)     → false
+	const friend bool operator < (const CRational &num1, const CRational &num2);
+	const friend bool operator > (const CRational &num1, const CRational &num2);
+	const friend bool operator <= (const CRational &num1, const CRational &num2);
+	const friend bool operator >= (const CRational &num1, const CRational &num2);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -178,6 +190,7 @@ public:
 	// TODO: 13. Реализовать оператор вывода рационального числа в выходной поток 
 	//	std::ostream в формате <числитель>/<знаменатель>, 
 	//	например: 7/15
+	friend std::ostream& operator << (std::ostream& stream, CRational const &rational);
 	//////////////////////////////////////////////////////////////////////////
 
 
@@ -187,6 +200,7 @@ public:
 	// TODO: 14. Реализовать оператор ввода рационального числа из входного потока 
 	//	std::istream в формате <числитель>/<знаменатель>, 
 	//	например: 7/15
+	friend std::istream& operator >> (std::istream& stream, CRational const &rational);
 	//////////////////////////////////////////////////////////////////////////
 private:
 	int m_numerator;
@@ -202,6 +216,16 @@ unsigned LCM(unsigned a, unsigned b);
 
 const CRational operator + (const CRational &num1, const CRational &num2);
 const CRational operator - (const CRational &num1, const CRational &num2);
+const CRational operator * (const CRational &num1, const CRational &num2);
+const CRational operator / (const CRational &num1, const CRational &num2);
+
+const bool operator < (const CRational &num1, const CRational &num2);
+const bool operator > (const CRational &num1, const CRational &num2);
+const bool operator <= (const CRational &num1, const CRational &num2);
+const bool operator >= (const CRational &num1, const CRational &num2);
 
 const bool operator == (const CRational &num1, const CRational &num2);
 const bool operator != (const CRational &num1, const CRational &num2);
+
+std::ostream& operator << (std::ostream &stream, const CRational &num);
+std::istream & operator>>(std::istream & stream, CRational & rational);

@@ -264,6 +264,26 @@ BOOST_AUTO_TEST_CASE(AssigningSubtraction)
 //	(1/2) * (2/3) = (1/3)
 //	(1/2) * (-3)  = (-3/2)
 //	(7*2) / 3     = (14/3)
+BOOST_AUTO_TEST_CASE(TestMultiplicationOperator)
+{
+	{
+		CRational r1(1, 2);
+		CRational r2(1, 6);
+		CRational r = r1 * r2;
+		BOOST_CHECK_EQUAL(r.GetNumerator(), 1);
+		BOOST_CHECK_EQUAL(r.GetDenominator(), 12);
+	}
+	{
+		CRational r = CRational(1, 2) * (-3);
+		BOOST_CHECK_EQUAL(r.GetNumerator(), -3);
+		BOOST_CHECK_EQUAL(r.GetDenominator(), 2);
+	}
+	{
+		CRational r = CRational(7 * 2, 3);
+		BOOST_CHECK_EQUAL(r.GetNumerator(), 14);
+		BOOST_CHECK_EQUAL(r.GetDenominator(), 3);
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -277,6 +297,26 @@ BOOST_AUTO_TEST_CASE(AssigningSubtraction)
 //	(1/2) ⁄ (2/3) = (3/4)
 //	(1/2) ⁄ 5     = (1/10)
 //	7 ⁄ (2/3)     = (21/2)
+BOOST_AUTO_TEST_CASE(TestDivisionOperator)
+{
+	{
+		CRational r1(1, 2);
+		CRational r2(2, 3);
+		CRational r = r1 / r2;
+		BOOST_CHECK_EQUAL(r.GetNumerator(), 3);
+		BOOST_CHECK_EQUAL(r.GetDenominator(), 4);
+	}
+	{
+		CRational r = CRational(1, 2) / 5;
+		BOOST_CHECK_EQUAL(r.GetNumerator(), 1);
+		BOOST_CHECK_EQUAL(r.GetDenominator(), 10);
+	}
+	{
+		CRational r = 7 / CRational(2, 3);
+		BOOST_CHECK_EQUAL(r.GetNumerator(), 21);
+		BOOST_CHECK_EQUAL(r.GetDenominator(), 2);
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -289,6 +329,22 @@ BOOST_AUTO_TEST_CASE(AssigningSubtraction)
 //	либо целое:
 //	(1/2) *= (2/3) → (1/3)
 //	(1/2) *= 3     → (3/2)
+BOOST_AUTO_TEST_CASE(AssigningMultiplication)
+{
+	{
+		CRational r1(1, 2);
+		CRational r2(2, 3);
+		r1 *= r2;
+		BOOST_CHECK_EQUAL(r1.GetNumerator(), 1);
+		BOOST_CHECK_EQUAL(r1.GetDenominator(), 3);
+	}
+	{
+		CRational r1(1, 2);
+		r1 *= 3;
+		BOOST_CHECK_EQUAL(r1.GetNumerator(), 3);
+		BOOST_CHECK_EQUAL(r1.GetDenominator(), 2);
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -301,6 +357,22 @@ BOOST_AUTO_TEST_CASE(AssigningSubtraction)
 //	либо целое:
 //	(1/2) /= (2/3) → (3/4)
 //	(1/2) /= 3     → (1/6)
+BOOST_AUTO_TEST_CASE(AssigningDivision)
+{
+	{
+		CRational r1(1, 2);
+		CRational r2(2, 3);
+		r1 /= r2;
+		BOOST_CHECK_EQUAL(r1.GetNumerator(), 3);
+		BOOST_CHECK_EQUAL(r1.GetDenominator(), 4);
+	}
+	{
+		CRational r1(1, 2);
+		r1 /= 3;
+		BOOST_CHECK_EQUAL(r1.GetNumerator(), 1);
+		BOOST_CHECK_EQUAL(r1.GetDenominator(), 6);
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -345,6 +417,20 @@ BOOST_AUTO_TEST_CASE(TestEqualNumbers)
 //	(1/2) < 7      → true
 //	3 <= (7/2)     → true
 //	3 >= (8/2)     → false
+BOOST_AUTO_TEST_CASE(TestComparingNumbers)
+{
+	{
+		CRational const rational1(1, 2), rational2(1, 3);
+		BOOST_CHECK_EQUAL(rational1 >= rational2, true);
+		BOOST_CHECK_EQUAL(rational1 <= rational2, false);
+	}
+	{
+		BOOST_CHECK_EQUAL(CRational(3, 1) > 2, true);
+		BOOST_CHECK_EQUAL(CRational(1, 2) < 7, true);
+		BOOST_CHECK_EQUAL(3 <= CRational(7, 2), true);
+		BOOST_CHECK_EQUAL(3 >= CRational(8, 2), false);
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -354,6 +440,17 @@ BOOST_AUTO_TEST_CASE(TestEqualNumbers)
 // TODO: 13. Реализовать оператор вывода рационального числа в выходной поток 
 //	std::ostream в формате <числитель>/<знаменатель>, 
 //	например: 7/15
+BOOST_AUTO_TEST_CASE(TestOutput)
+{
+	{
+		CRational rational(7, 15);
+		std::ostringstream stream;
+		stream << rational;
+		std::string str = stream.str();
+
+		BOOST_CHECK_EQUAL(str, "7/15");
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -363,6 +460,16 @@ BOOST_AUTO_TEST_CASE(TestEqualNumbers)
 // TODO: 14. Реализовать оператор ввода рационального числа из входного потока 
 //	std::istream в формате <числитель>/<знаменатель>, 
 //	например: 7/15
+BOOST_AUTO_TEST_CASE(TestInput)
+{
+	{
+		CRational num1(7, 15), num2;
+		std::istringstream stream("7/15");
+		stream >> num2;
+
+		BOOST_CHECK_EQUAL(num1 == num2, true);
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 
 BOOST_AUTO_TEST_SUITE_END()
